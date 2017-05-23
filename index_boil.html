@@ -13,9 +13,9 @@
     <script src="components/aframe-look-at-component.js"></script>
     <script src="https://unpkg.com/aframe-text-geometry-component/dist/aframe-text-geometry-component.min.js"></script>
     <script src="components/set-image.js"></script>
+    <script src="https://rawgit.com/mayognaise/aframe-mouse-cursor-component/master/dist/aframe-mouse-cursor-component.min.js"></script>
+    <script src="components/cursor-listener.js"></script>
 
-    <script>
-    </script>
 </head>
 
 <body>
@@ -23,26 +23,36 @@
         <a-assets>
             <a-asset-item id="optimerBoldFont" src="https://rawgit.com/mrdoob/three.js/dev/examples/fonts/optimer_bold.typeface.json"></a-asset-item>
             <a-mixin id="boldFont" text="font: #optimerBoldFont"></a-mixin>
-            <img id="city" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/city.jpg">
+
+            <!-- Images. -->
+            <img id="frontCenter" crossorigin="anonymous" src="img/FrontCenter.jpg">
+            <img id="goldHorns" crossorigin="anonymous" src="img/GoldHorns.jpg">
+            <img id="redTop" crossorigin="anonymous" src="img/RedTop.jpg">
+            <img id="bonsai" crossorigin="anonymous" src="img/Bonsai.jpg">
+
+            <!-- Image Thumbnails -->
             <img id="city-thumb" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/thumb-city.jpg">
             <img id="cubes-thumb" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/thumb-cubes.jpg">
             <img id="sechelt-thumb" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/thumb-sechelt.jpg">
             <audio id="click-sound" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/audio/click.ogg"></audio>
-            <img id="cubes" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/cubes.jpg">
-            <img id="sechelt" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/sechelt.jpg">
 
-            <!-- Image link template to be reused. -->
+
+            <!-- Image link template (boilerplate) -->
             <script id="link" type="text/html">
                 <a-entity class="link" geometry="primitive: plane; height: 1.2; width: 1.2" material="shader: flat; src: ${thumb}" event-set__1="_event: mousedown; scale: 1 1 1" event-set__2="_event: mouseup; scale: 1.2 1.2 1" event-set__3="_event: mouseenter; scale: 1.2 1.2 1"
                     event-set__4="_event: mouseleave; scale: 1 1 1" set-image="on: click; target: #image-360; src: ${src}" sound="on: click; src: #click-sound"></a-entity>
             </script>
 
-
+            <!-- Pic link template (boilerplate) -->
             <script id="picObj" type="text/html">
                 <a-entity class="picObj" look-at="[camera]">
-                    <a-entity class="title" mixin="boldFont" position="-1.50 1 0" text-geometry="value: ${label}"></a-entity>
-                    <a-entity class="link" geometry="primitive: plane; height: 1.2; width: 1.2" material="shader: flat; src: ${thumb}" event-set__1="_event: mousedown; scale: 1 1 1" event-set__2="_event: mouseup; scale: 1.2 1.2 1" event-set__3="_event: mouseenter; scale: 1.2 1.2 1"
-                        event-set__4="_event: mouseleave; scale: 1 1 1" set-image="on: click; target: #image-360; src: ${src}" sound="on: click; src: #click-sound"></a-entity>
+                    <a-entity class="link" geometry="primitive: plane; height: 1; width: 1" material="shader: flat; src: ${thumb}" event-set__1="_event: mousedown; scale: 1 1 1" event-set__2="_event: mouseup; scale: 1.2 1.2 1" event-set__3="_event: mouseenter; scale: 1.2 1.2 1"
+                        event-set__4="_event: mouseleave; scale: 1 1 1" set-image="on: click; target: #image-360; src: ${src}" sound="on: click; src: #click-sound" cursor-listener>
+                        <a-entity class="title" mixin="boldFont" position="0 .5 0" scale=".2 .2 .2" text-geometry="value: ${label}" visible="false">
+                        </a-entity>
+                    </a-entity>
+                    <a-entity geometry="primitive: plane; height: 2; width: 2" position="0 0 -1" material="color:black">
+                    </a-entity>
                     <a-entity class="details" geometry="primitive: plane; height: 2; width: 2" material="shader: flat; src: ${thumb}" position="-0.03 -1.54 .82" rotation="-45.60 0 0" visible="false"></a-entity>
                 </a-entity>
 
@@ -52,25 +62,35 @@
                 <a-entity class="title" mixin="boldFont" position="-1.50 1 0" text-geometry="value: ${label}"></a-entity>
             </script>
 
+
         </a-assets>
 
-        <!-- 360-degree image. -->
-        <a-sky id="image-360" radius="10" src="#city"></a-sky>
-
-        <!-- Image links. -->
-        <a-entity id="links" layout="type: circle; radius: 3" position="0 0 0">
-            <a-entity template="src:#picObj" data-src="#city" data-thumb="#city-thumb" data-label="Fuck You"></a-entity>
-            <a-entity template="src:#picObj" data-src="#sechelt" data-thumb="#sechelt-thumb" data-label="Fuck You"></a-entity>
-            <a-entity template="src:#picObj" data-src="#city" data-thumb="#city-thumb" data-label="Fuck You"></a-entity>
-            <a-entity template="src:#picObj" data-src="#sechelt" data-thumb="#sechelt-thumb" data-label="Fuck You"></a-entity>
+        <a-entity camera look-controls mouse-cursor>
+            <a-cursor id="cursor" animation__click="property: scale; startEvents: click; from: 0.1 0.1 0.1; to: 1 1 1; dur: 150" animation__fusing="property: fusing; startEvents: fusing; from: 1 1 1; to: 0.1 0.1 0.1; dur: 1500" event-set__1="_event: mouseenter; color: springgreen"
+                event-set__2="_event: mouseleave; color: black" cursor="fuse:true; fuseTimeout:5000" raycaster="objects: .link"></a-cursor>
         </a-entity>
 
+        <!-- 360-degree image. -->
+        <a-sky id="image-360" radius="10" src="#frontCenter"></a-sky>
+
+        <!-- Floor. -->
+        <a-entity id="floor" geometry="primitive:cylinder; radius:.8 height:1" position="0 -4 0"></a-entity>
+
+        <!--Gallery UI. -->
+        <a-entity position="0 0 0">
+
+            <!-- Image links. -->
+            <a-entity id="links" layout="type: circle; radius: 2" position="0 -1 0">
+                <a-entity template="src:#picObj" data-src="#frontCenter" data-thumb="#city-thumb" data-label="Fuck You"></a-entity>
+                <a-entity template="src:#picObj" data-src="#goldHorns" data-thumb="#sechelt-thumb" data-label="Fuck You"></a-entity>
+                <a-entity template="src:#picObj" data-src="#redTop" data-thumb="#city-thumb" data-label="Fuck You"></a-entity>
+                <a-entity template="src:#picObj" data-src="#bonsai" data-thumb="#sechelt-thumb" data-label="Fuck You"></a-entity>
+            </a-entity>
+
+        </a-entity>
 
         <!-- Camera + cursor. -->
-        <a-entity camera look-controls>
-            <a-cursor id="cursor" animation__click="property: scale; startEvents: click; from: 0.1 0.1 0.1; to: 1 1 1; dur: 150" animation__fusing="property: fusing; startEvents: fusing; from: 1 1 1; to: 0.1 0.1 0.1; dur: 1500" event-set__1="_event: mouseenter; color: springgreen"
-                event-set__2="_event: mouseleave; color: black" fuse="true" raycaster="objects: .link"></a-cursor>
-        </a-entity>
+
     </a-scene>
 </body>
 
